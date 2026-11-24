@@ -1,0 +1,167 @@
+[
+ {
+  "name": "table-header-left",
+  "box": [
+   78,
+   172,
+   60,
+   24
+  ],
+  "method": "align",
+  "colour": "#69b57a",
+  "tolerance_shift": 0.4
+ },
+ {
+  "name": "table-pill",
+  "box": [
+   80,
+   194,
+   40,
+   14
+  ],
+  "method": "extent",
+  "colour": "#45a665",
+  "tolerance_shift": 0.4
+ },
+ {
+  "name": "example-box-left",
+  "box": [
+   78,
+   268,
+   66,
+   28
+  ],
+  "method": "extent",
+  "colour": "#45a665",
+  "tolerance_shift": 0.4
+ },
+ {
+  "name": "glossary-icon",
+  "box": [
+   62,
+   570,
+   36,
+   40
+  ],
+  "method": "extent",
+  "colour": "#45a665",
+  "tolerance_shift": 0.4
+ },
+ {
+  "name": "glossary-frame-corner",
+  "box": [
+   436,
+   583,
+   26,
+   28
+  ],
+  "method": "align",
+  "colour": "#45a665",
+  "tolerance_shift": 0.4
+ },
+ {
+  "name": "write-rule-middle",
+  "box": [
+   300,
+   338,
+   60,
+   14
+  ],
+  "method": "line",
+  "colour": "ink",
+  "tolerance_shift": 0.4,
+  "tolerance_thickness": 0.2
+ },
+ {
+  "name": "text-lines-header",
+  "box": [
+   84,
+   138,
+   372,
+   36
+  ],
+  "method": "lines",
+  "colour": "text"
+ },
+ {
+  "name": "text-lines-table-rows",
+  "box": [
+   84,
+   208,
+   372,
+   54
+  ],
+  "method": "lines",
+  "colour": "text",
+  "centre": true
+ },
+ {
+  "name": "text-lines-example",
+  "box": [
+   84,
+   294,
+   372,
+   20
+  ],
+  "method": "lines",
+  "colour": "text",
+  "centre": true
+ },
+ {
+  "name": "text-lines-dialogues",
+  "box": [
+   84,
+   330,
+   372,
+   150
+  ],
+  "method": "lines",
+  "colour": "text",
+  "centre": true
+ },
+ {
+  "name": "letter-pitch-dialogues",
+  "box": [
+   84,
+   330,
+   372,
+   150
+  ],
+  "method": "pitch",
+  "colour": "text"
+ },
+ {
+  "name": "text-lines-glossary-terms",
+  "box": [
+   94,
+   594,
+   20,
+   52
+  ],
+  "method": "lines",
+  "colour": "text",
+  "centre": true
+ },
+ {
+  "name": "columns-glossary-row-1",
+  "box": [
+   94,
+   596,
+   372,
+   14
+  ],
+  "method": "columns",
+  "colour": "text"
+ },
+ {
+  "name": "columns-glossary-row-2",
+  "box": [
+   94,
+   612,
+   372,
+   14
+  ],
+  "method": "columns",
+  "colour": "text"
+ }
+]

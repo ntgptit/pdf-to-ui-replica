@@ -1,0 +1,184 @@
+[
+ {
+  "name": "card top",
+  "role": "card",
+  "field": "top",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "card bottom",
+  "role": "card",
+  "field": "bottom",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "card width",
+  "role": "card",
+  "field": "width",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "card x0, left pages",
+  "role": "card",
+  "field": "x0",
+  "sides": "left",
+  "pick": "first"
+ },
+ {
+  "name": "card x0, right pages",
+  "role": "card",
+  "field": "x0",
+  "sides": "right",
+  "pick": "first"
+ },
+ {
+  "name": "card corner radius",
+  "role": "card",
+  "field": "radius",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "card stroke width",
+  "role": "card",
+  "field": "linewidth",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "fold size",
+  "role": "fold",
+  "field": "width",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "hatch band top (visible)",
+  "role": "hatch-ground",
+  "field": "top",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "hatch band height (visible)",
+  "role": "hatch-ground",
+  "field": "height",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "hatch bitmap top",
+  "role": "hatch-bitmap",
+  "field": "top",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "hatch bitmap height",
+  "role": "hatch-bitmap",
+  "field": "height",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "tab top",
+  "role": "tab",
+  "field": "top",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "tab height",
+  "role": "tab",
+  "field": "height",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "tab right edge",
+  "role": "tab",
+  "field": "x1",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "tab radius",
+  "role": "tab",
+  "field": "radius",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "bubble top",
+  "role": "bubble-stroke",
+  "field": "top",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "bubble height with tail",
+  "role": "bubble-stroke",
+  "field": "height",
+  "sides": "both",
+  "pick": "first"
+ },
+ {
+  "name": "bubble x0, left pages",
+  "role": "bubble-stroke",
+  "field": "x0",
+  "sides": "left",
+  "pick": "first"
+ },
+ {
+  "name": "bubble x0, right pages",
+  "role": "bubble-stroke",
+  "field": "x0",
+  "sides": "right",
+  "pick": "first"
+ },
+ {
+  "name": "frame width",
+  "role": "frame",
+  "field": "width",
+  "sides": "both",
+  "pick": "all"
+ },
+ {
+  "name": "frame radius",
+  "role": "frame",
+  "field": "radius",
+  "sides": "both",
+  "pick": "all"
+ },
+ {
+  "name": "frame stroke width",
+  "role": "frame",
+  "field": "linewidth",
+  "sides": "both",
+  "pick": "all"
+ },
+ {
+  "name": "pill height",
+  "role": "pill",
+  "field": "height",
+  "sides": "both",
+  "pick": "all"
+ },
+ {
+  "name": "answer rule stroke width",
+  "role": "answer-rule",
+  "field": "linewidth",
+  "sides": "both",
+  "pick": "all"
+ },
+ {
+  "name": "footer text top",
+  "role": "footer-text",
+  "field": "top",
+  "sides": "both",
+  "pick": "first"
+ }
+]

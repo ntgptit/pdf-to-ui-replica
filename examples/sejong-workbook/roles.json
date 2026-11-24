@@ -1,0 +1,214 @@
+[
+ {
+  "role": "tab",
+  "kind": "curve",
+  "fill": "#45a665",
+  "top": [
+   null,
+   30
+  ],
+  "height": [
+   30,
+   null
+  ],
+  "palette": "--pdf-green"
+ },
+ {
+  "role": "hatch-ground",
+  "kind": "rect",
+  "fill": "#fddb7d",
+  "width": [
+   400,
+   null
+  ],
+  "height": [
+   null,
+   12
+  ],
+  "palette": "--pdf-yellow"
+ },
+ {
+  "role": "hatch-bitmap",
+  "kind": "image",
+  "width": [
+   400,
+   null
+  ],
+  "height": [
+   null,
+   14
+  ]
+ },
+ {
+  "role": "card",
+  "kind": "curve",
+  "stroke": "#a7a5a6",
+  "linewidth": [
+   1.15,
+   1.25
+  ],
+  "height": [
+   400,
+   null
+  ],
+  "palette": "--pdf-card-stroke",
+  "palette_from": "stroke"
+ },
+ {
+  "role": "fold",
+  "kind": "curve",
+  "stroke": "#a7a5a6",
+  "linewidth": [
+   1.15,
+   1.25
+  ],
+  "width": [
+   10,
+   30
+  ],
+  "height": [
+   10,
+   30
+  ]
+ },
+ {
+  "role": "bubble-stroke",
+  "kind": "curve",
+  "stroke": "#4f4c4d",
+  "linewidth": [
+   1.45,
+   1.55
+  ],
+  "height": [
+   25,
+   40
+  ],
+  "top": [
+   70,
+   130
+  ],
+  "palette": "--pdf-bubble",
+  "palette_from": "stroke"
+ },
+ {
+  "role": "frame",
+  "kind": "curve",
+  "stroke": "#45a665",
+  "linewidth": [
+   0.44,
+   0.48
+  ],
+  "width": [
+   200,
+   null
+  ]
+ },
+ {
+  "role": "glossary-frame",
+  "kind": "curve",
+  "stroke": "#45a665",
+  "linewidth": [
+   0.48,
+   0.52
+  ],
+  "width": [
+   200,
+   null
+  ]
+ },
+ {
+  "role": "pill",
+  "kind": "curve",
+  "fill": "#45a665",
+  "width": [
+   35,
+   70
+  ],
+  "height": [
+   10,
+   22
+  ]
+ },
+ {
+  "role": "glossary-icon",
+  "kind": "curve",
+  "fill": "#45a665",
+  "width": [
+   null,
+   40
+  ],
+  "height": [
+   25,
+   40
+  ],
+  "top": [
+   150,
+   null
+  ]
+ },
+ {
+  "role": "answer-rule",
+  "kind": "line",
+  "stroke": "#231f20",
+  "linewidth": [
+   0.28,
+   0.32
+  ],
+  "height": [
+   null,
+   0.5
+  ],
+  "palette": "--pdf-ink",
+  "palette_from": "stroke"
+ },
+ {
+  "role": "table-rule",
+  "kind": "line",
+  "stroke": "#7bbd86",
+  "linewidth": [
+   0.23,
+   0.27
+  ],
+  "width": [
+   30,
+   null
+  ],
+  "palette": "--pdf-green-light",
+  "palette_from": "stroke"
+ },
+ {
+  "role": "table-header",
+  "kind": "rect",
+  "fill": "#69b57a",
+  "height": [
+   15,
+   20
+  ],
+  "width": [
+   50,
+   330
+  ],
+  "palette": "--pdf-green-table"
+ },
+ {
+  "role": "caption-text",
+  "kind": "glyph",
+  "fill": "#918f90",
+  "palette": "--pdf-caption"
+ },
+ {
+  "role": "red-text",
+  "kind": "glyph",
+  "fill": "#f04145",
+  "palette": "--pdf-red"
+ },
+ {
+  "role": "footer-text",
+  "kind": "glyph",
+  "fill": "#231f20",
+  "top": [
+   675,
+   null
+  ]
+ }
+]

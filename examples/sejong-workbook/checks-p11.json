@@ -1,0 +1,156 @@
+[
+ {
+  "name": "table left",
+  "pdf": {
+   "role": "table-header",
+   "field": "x0",
+   "index": 0
+  },
+  "dom": {
+   "id": "cue-table",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "table top",
+  "pdf": {
+   "role": "table-header",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "cue-table",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "example box left",
+  "pdf": {
+   "role": "frame",
+   "field": "x0",
+   "index": 0
+  },
+  "dom": {
+   "id": "example-box",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "example box top",
+  "pdf": {
+   "role": "frame",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "example-box",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 1.5
+ },
+ {
+  "name": "example box width",
+  "pdf": {
+   "role": "frame",
+   "field": "width",
+   "index": 0
+  },
+  "dom": {
+   "id": "example-box",
+   "field": "w",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "example box height",
+  "pdf": {
+   "role": "frame",
+   "field": "height",
+   "index": 0
+  },
+  "dom": {
+   "id": "example-box",
+   "field": "h",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "glossary icon left",
+  "pdf": {
+   "role": "glossary-icon",
+   "field": "x0",
+   "index": 0
+  },
+  "dom": {
+   "id": "glossary-icon",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "glossary icon top",
+  "pdf": {
+   "role": "glossary-icon",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "glossary-icon",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "glossary icon width",
+  "pdf": {
+   "role": "glossary-icon",
+   "field": "width",
+   "index": 0
+  },
+  "dom": {
+   "id": "glossary-icon",
+   "field": "w",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "glossary frame left",
+  "pdf": {
+   "role": "glossary-frame",
+   "field": "x0",
+   "index": 0
+  },
+  "dom": {
+   "id": "glossary-frame",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "glossary frame top",
+  "pdf": {
+   "role": "glossary-frame",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "glossary-frame",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 1.0
+ }
+]

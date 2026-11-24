@@ -1,0 +1,60 @@
+[
+ {
+  "name": "text-lines-header-1",
+  "box": [
+   84,
+   138,
+   372,
+   36
+  ],
+  "method": "lines",
+  "colour": "text"
+ },
+ {
+  "name": "text-lines-items-1",
+  "box": [
+   84,
+   212,
+   372,
+   112
+  ],
+  "method": "lines",
+  "colour": "text",
+  "centre": true
+ },
+ {
+  "name": "letter-pitch-items-1",
+  "box": [
+   84,
+   212,
+   372,
+   112
+  ],
+  "method": "pitch",
+  "colour": "text"
+ },
+ {
+  "name": "text-lines-match-rows",
+  "box": [
+   150,
+   424,
+   260,
+   84
+  ],
+  "method": "lines",
+  "colour": "text",
+  "centre": true
+ },
+ {
+  "name": "text-lines-numbered",
+  "box": [
+   84,
+   570,
+   372,
+   76
+  ],
+  "method": "lines",
+  "colour": "text",
+  "centre": true
+ }
+]

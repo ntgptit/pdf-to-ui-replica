@@ -1,0 +1,260 @@
+{
+  "entries": [
+    {
+      "id": "KH-001",
+      "title": "Hairline thinner than 1 CSS px is drawn 1 px thick",
+      "tags": [
+        "lines",
+        "css"
+      ],
+      "symptom": "Printed rules of 0.25-0.5 pt (answer lines, table rules, frames) come out 1 px and heavy: the code says 0.5px or the agent rounded it to 1px, and the page looks darker and coarser than the book.",
+      "cause": "Chrome rounds a non-zero border or outline width under 1 CSS px up to 1 CSS px, at any device pixel ratio (computed border-top-width reads 1px for 0.5px and for calc(var(--wb-pt) * 0.3)). A box under 1 px high used as a bar (height: max(calc(var(--wb-pt) * 0.3), 0.5px)) is painted 1 CSS px too.",
+      "fix": "To get a line under 1 CSS px (for example 0.5 px): (a) an SVG stroke, stroke-width=\"0.5\" (or the measured pt in a pt viewBox): right for frames, curves and lines that scale with the sheet; (b) a 1 px bar scaled down: height 1px; background currentColor; scale: 1 0.5; transform-origin: top (vertical line: width 1px; scale: 0.5 1), in Tailwind `h-px scale-y-50 origin-top`. Never border/outline 0.5px (painted 1px), never a box under 1px, a half-filled gradient or a 0.5px box-shadow (lost or unstable), and never round a measured thin line up to 1px.",
+      "check": "zoom part with method `line` (thickness within 0.1 pt of the PDF); in a screenshot at DPR 2 a 0.5 px line is exactly one device pixel row; look at the pair tiles (>= 6 px/pt).",
+      "detect": [
+        {
+          "glob": "*.css",
+          "severity": "ERROR",
+          "pattern": "\\b(?:border|outline)(?:-(?:top|right|bottom|left|block|inline)(?:-(?:start|end))?)?(?:-width)?\\s*:[^;]*(?:var\\(--wb-pt\\)|(?<![\\d.])0?\\.\\d+px)",
+          "message": "border/outline width that scales with --wb-pt or is under 1 px is painted at least 1 px: draw the hairline as an SVG stroke or a background bar (KH-001)"
+        },
+        {
+          "glob": "*.tsx",
+          "severity": "ERROR",
+          "pattern": "\\b(?:border|outline)(?:-[trblxy])?-\\[0?\\.\\d+px\\]",
+          "message": "sub-pixel border utility is painted 1 px: draw the hairline as an SVG stroke or a background bar (KH-001)"
+        },
+        {
+          "glob": "*.css",
+          "severity": "WARNING",
+          "pattern": "\\b(?:height|block-size|width|inline-size)\\s*:[^;]*(?:max\\([^;]*(?<![\\d.])0?\\.\\d+px|(?<![\\d.])0?\\.\\d+px\\s*;)",
+          "message": "a box under 1 px is painted 1 CSS px: a hairline drawn as a thin box is too thick; use an SVG stroke (KH-001)"
+        },
+        {
+          "glob": "books/*.css",
+          "severity": "WARNING",
+          "pattern": "\\b(?:border|outline)(?:-(?:top|right|bottom|left|block|inline)(?:-(?:start|end))?)?(?:-width)?\\s*:\\s*[^;]*(?<![\\d.])1px\\b",
+          "message": "a printed line drawn with the default 1px: take its width from the measured tokens; under 1 px draw it as an SVG stroke or a 1px bar with scale (KH-001)"
+        },
+        {
+          "glob": "books/*.tsx",
+          "severity": "WARNING",
+          "pattern": "className=[\\\"'{][^\\\"'}]*\\bborder(?:-[trblxy])?(?=[\\s\\\"'}])",
+          "message": "Tailwind `border` is 1px: a printed line takes its width from the tokens; under 1 px use an SVG stroke or `h-px scale-y-50 origin-top` (KH-001)"
+        }
+      ],
+      "seen": [],
+      "added": "2026-11-24",
+      "history": [
+        {
+          "date": "2026-11-24",
+          "reason": "Measured in Chromium (Playwright), DPR 1 and 2: border 0.5px, border calc(var(--wb-pt)*0.3) and a max(...,0.5px) background bar all paint 1.00 CSS px of ink; an SVG stroke of 0.204 paints 0.20 px.",
+          "fields": [
+            "cause",
+            "check",
+            "detect",
+            "fix"
+          ]
+        },
+        {
+          "date": "2026-11-24",
+          "reason": "Measured in Chromium at DPR 1, 2 and 3: border 0.5px and border 1px paint the same 1.00 CSS px; SVG stroke-width 0.5 and a 1px bar with scale 1 0.5 (also scaleY and Tailwind scale-y-50) paint 0.50 px at every DPR (one crisp device row at DPR 2), scale 1 0.3 paints 0.30; a half-filled 1px gradient paints 0 / 0.5 / 0.33 px and a 0.5px box-shadow nothing.",
+          "fields": [
+            "check",
+            "detect",
+            "fix",
+            "symptom",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KH-002",
+      "title": "em letter or word spacing declared on an ancestor",
+      "tags": [
+        "text",
+        "css"
+      ],
+      "symptom": "Letter pitch or word gaps stay wrong whatever value is set; the typography or zoom pitch check keeps failing by a constant amount.",
+      "cause": "letter-spacing and word-spacing in em are computed with the font size of the element that declares them and inherited as a fixed length; declared on the sheet (16 px) they barely affect 10 pt body text.",
+      "fix": "Declare em spacing in the same rule as the font-size it scales with (.wb-body, .wb-instruction…), never on the sheet or a wrapper.",
+      "check": "typography --url (family and spacing scores) and zoom method `pitch` on a body line.",
+      "seen": [],
+      "added": "2026-11-24"
+    },
+    {
+      "id": "KH-003",
+      "title": "SVG stroke is centred on its path",
+      "tags": [
+        "svg",
+        "lines"
+      ],
+      "symptom": "A frame, card or bubble drawn in SVG is larger than the PDF by half its stroke on every side; geometry checks of the outer edge fail by stroke/2.",
+      "cause": "An SVG stroke is painted half inside and half outside the path; the PDF's numbers are the outer edge of the ink.",
+      "fix": "Inset the path by half the stroke width (x + w/2, width - w) so the outer edge lands on the measured box; keep vector-effect off so the stroke scales with the sheet.",
+      "check": "geometry check of the part's outer box within 0.1-0.3 pt; zoom method `extent`.",
+      "seen": [],
+      "added": "2026-11-24"
+    },
+    {
+      "id": "KH-004",
+      "title": "Inline geometry blocks the reading view",
+      "tags": [
+        "react",
+        "layout",
+        "reading"
+      ],
+      "symptom": "The reading view cannot move or resize a block: Tailwind reading: classes have no effect on the sheet's positions and widths.",
+      "cause": "Inline style beats every class; geometry written as style={{ left, width }} cannot be overridden by the reading view or another book.",
+      "fix": "Inline style sets only CSS custom properties (style={{ '--card-left': pt(x) }}); the part's CSS under [data-book=<id>][data-view=sheet] reads them.",
+      "check": "pdfmeasure structure (rule L4); reflow at 320-768 px.",
+      "seen": [],
+      "added": "2026-11-24"
+    },
+    {
+      "id": "KH-005",
+      "title": "Tailwind variant named print clashes with @media print",
+      "tags": [
+        "tailwind",
+        "css"
+      ],
+      "symptom": "Styles meant for the print sheet appear only when the page is printed, or the reading view breaks when printing.",
+      "cause": "Tailwind already defines the print: variant as @media print; a custom variant with the same name shadows or conflicts with it.",
+      "fix": "Name the view variants sheet: and reading: (@custom-variant sheet (&:where([data-view=sheet], [data-view=sheet] *))).",
+      "check": "compile the classes with the project's Tailwind and read the generated selectors.",
+      "detect": [
+        {
+          "glob": "*.css",
+          "severity": "ERROR",
+          "pattern": "@custom-variant\\s+print\\b",
+          "message": "custom variant `print` clashes with Tailwind's @media print variant: name it `sheet` (KH-005)"
+        }
+      ],
+      "seen": [],
+      "added": "2026-11-24"
+    },
+    {
+      "id": "KH-006",
+      "title": "Answer input under 16 px makes the phone zoom on focus",
+      "tags": [
+        "reading",
+        "tailwind"
+      ],
+      "symptom": "On a phone, tapping an answer field zooms the page in and the reader has to zoom back out.",
+      "cause": "Mobile Safari zooms into any focused input whose text is smaller than 16 px.",
+      "fix": "Inputs in the reading view render text at 16 px or more (keep the shadcn Input size; do not add text-xs or text-sm to it).",
+      "check": "reflow (body text >= 16 px) and a manual focus on a phone-sized viewport.",
+      "detect": [
+        {
+          "glob": "*.tsx",
+          "severity": "WARNING",
+          "pattern": "<(?:Input|Textarea|input|textarea)\\b[^>]*className=\\\"[^\\\"]*\\btext-(?:xs|sm)\\b",
+          "message": "input text under 16 px makes phones zoom on focus (KH-006)"
+        }
+      ],
+      "seen": [],
+      "added": "2026-11-24"
+    },
+    {
+      "id": "KH-007",
+      "title": "Pattern bitmap box is larger than its visible band",
+      "tags": [
+        "measuring",
+        "css"
+      ],
+      "symptom": "A hatch or texture band is too tall or starts too high; its stripes have the wrong phase.",
+      "cause": "The PDF places a larger bitmap and clips it with a vector rectangle; the bitmap's box is not what shows.",
+      "fix": "Measure the clipping vector rectangle for the band, the period and angle from a high-zoom crop, and the phase per page side; draw it with repeating-linear-gradient.",
+      "check": "zoom part over the band with method `align` and `ink`.",
+      "seen": [],
+      "added": "2026-11-24"
+    },
+    {
+      "id": "KH-008",
+      "title": "Small parts lost at low zoom",
+      "tags": [
+        "measuring",
+        "artwork"
+      ],
+      "symptom": "Numbered stroke-order circles, arrowheads, dotted guides or thin tails are missing or wrong in the rebuild and nobody noticed.",
+      "cause": "A whole page viewed at 1.4-3 px/pt (and scaled down again when shown) hides parts a few points large; enlarged crops add no detail.",
+      "fix": "Inventory and QA on `tiles` at >= 6 px/pt (pdf mode for the inventory, pair mode after each scan); list small parts as their own inventory rows.",
+      "check": "state view with one observation per tile (the harness requires it).",
+      "seen": [],
+      "added": "2026-11-24"
+    },
+    {
+      "id": "KH-009",
+      "title": "Fixed pixel font size in the sheet",
+      "tags": [
+        "text",
+        "css"
+      ],
+      "symptom": "Sheet text is right at one width and wrong at every other: it does not scale with the page.",
+      "cause": "A font-size in px inside the sheet CSS ignores --wb-pt, while every other length scales with the sheet width.",
+      "fix": "Sheet sizes are calc(var(--wb-pt) * <pt>) from the typography spec; px sizes belong to the reading view's Tailwind scale only.",
+      "check": "typography --url at two sheet widths gives the same scores.",
+      "detect": [
+        {
+          "glob": "books/*.css",
+          "severity": "WARNING",
+          "pattern": "font-size\\s*:\\s*\\d+(?:\\.\\d+)?px",
+          "message": "px font size in a book's sheet CSS does not scale with the page: use calc(var(--wb-pt) * pt) (KH-009)"
+        }
+      ],
+      "seen": [],
+      "added": "2026-11-24"
+    },
+    {
+      "id": "KH-010",
+      "title": "Printed text is outlined: no font name or size in the PDF",
+      "tags": [
+        "fonts",
+        "text",
+        "measuring"
+      ],
+      "symptom": "pdfplumber finds no characters; the font family and size have to be guessed and the rebuilt text looks off.",
+      "cause": "Print PDFs often convert text to outlines: only the ink shapes remain.",
+      "fix": "Run typography --spec-only (core height, stroke, contrast), render candidate faces (project faces first, then open-licensed ones) and keep the best typography --url scores; scale the CSS size by the core-height ratio.",
+      "check": "typography --url: every style PASS (>= 95 %) or a reported WARNING with its cause.",
+      "seen": [],
+      "added": "2026-11-24"
+    },
+    {
+      "id": "KH-011",
+      "title": "One pattern built by several components drifts between pages",
+      "tags": [
+        "react",
+        "layout",
+        "text"
+      ],
+      "symptom": "The same element looks different from page to page: the example label's text sits lower on one page, the lead arrow rides on the answer rule on one page and sits above it on another, a table header pill is smaller.",
+      "cause": "Each page or block drew the pattern itself (its own pill, its own arrow and rule) instead of using one shared component, so spacing and alignment were tuned separately and drifted.",
+      "fix": "Every repeated pattern is one kit primitive (core/kit/contract.ts), implemented once per book in books/<id>/kit/<primitive>/ and used by every block; blocks never draw labels, lines, arrows or frames themselves (structure rules L16-L18).",
+      "check": "`consistency --url <lab>`: every instance of a primitive has the same height, text centre and part positions within 1 px; `structure` passes.",
+      "detect": [
+        {
+          "glob": "core/blocks/*.tsx",
+          "severity": "ERROR",
+          "pattern": "<(?:svg|line|rect|path)\\b|[→⟶➔➝]",
+          "message": "a block draws a pattern itself: use the kit primitive (KH-011)"
+        },
+        {
+          "glob": "books/*/parts/*.tsx",
+          "severity": "ERROR",
+          "pattern": "<(?:svg|line|rect|path)\\b|[→⟶➔➝]",
+          "message": "a book part draws a pattern itself: use the kit primitive (KH-011)"
+        }
+      ],
+      "seen": [
+        {
+          "build": "sejong-4a vs example-4a rebuild",
+          "date": "2026-11-24",
+          "note": "예시 label lower in the table page; lead arrow on the rule on page 11, above it on page 9"
+        }
+      ],
+      "added": "2026-11-24"
+    }
+  ]
+}

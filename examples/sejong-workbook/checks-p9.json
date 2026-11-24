@@ -1,0 +1,290 @@
+[
+ {
+  "name": "tab top",
+  "pdf": {
+   "role": "tab",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "tab",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "tab height",
+  "pdf": {
+   "role": "tab",
+   "field": "height",
+   "index": 0
+  },
+  "dom": {
+   "id": "tab",
+   "field": "h",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "tab right edge",
+  "pdf": {
+   "role": "tab",
+   "field": "x1",
+   "index": 0
+  },
+  "dom": {
+   "id": "tab",
+   "field": "right",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "tab radius (pt)",
+  "expect": 14.1,
+  "dom": {
+   "id": "tab",
+   "path": "style.borderRadius",
+   "unit": "px"
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "tab colour",
+  "expect": "#45a665",
+  "dom": {
+   "id": "tab",
+   "path": "style.background",
+   "unit": "colour"
+  },
+  "tolerance": 0
+ },
+ {
+  "name": "hatch top (visible band)",
+  "pdf": {
+   "role": "hatch-ground",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "hatch",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "hatch height (visible band)",
+  "pdf": {
+   "role": "hatch-ground",
+   "field": "height",
+   "index": 0
+  },
+  "dom": {
+   "id": "hatch",
+   "field": "h",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "bubble left",
+  "pdf": {
+   "role": "bubble-stroke",
+   "field": "x0",
+   "index": 0
+  },
+  "dom": {
+   "id": "bubble",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "bubble top",
+  "pdf": {
+   "role": "bubble-stroke",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "bubble",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "bubble height (body + tail)",
+  "pdf": {
+   "role": "bubble-stroke",
+   "field": "height",
+   "index": 0
+  },
+  "dom": {
+   "id": "bubble",
+   "field": "h",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "bubble width (same title)",
+  "pdf": {
+   "role": "bubble-stroke",
+   "field": "width",
+   "index": 0
+  },
+  "dom": {
+   "id": "bubble",
+   "field": "w",
+   "index": 0
+  },
+  "tolerance": 3.0
+ },
+ {
+  "name": "card left",
+  "pdf": {
+   "role": "card",
+   "field": "x0",
+   "index": 0
+  },
+  "dom": {
+   "id": "card",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "card top",
+  "pdf": {
+   "role": "card",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "card",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "card width",
+  "pdf": {
+   "role": "card",
+   "field": "width",
+   "index": 0
+  },
+  "dom": {
+   "id": "card",
+   "field": "w",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "card height",
+  "pdf": {
+   "role": "card",
+   "field": "height",
+   "index": 0
+  },
+  "dom": {
+   "id": "card",
+   "field": "h",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "word bank left",
+  "pdf": {
+   "role": "frame",
+   "field": "x0",
+   "index": 0
+  },
+  "dom": {
+   "id": "word-bank",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "word bank top",
+  "pdf": {
+   "role": "frame",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "word-bank",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "word bank width",
+  "pdf": {
+   "role": "frame",
+   "field": "width",
+   "index": 0
+  },
+  "dom": {
+   "id": "word-bank",
+   "field": "w",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "word bank height",
+  "pdf": {
+   "role": "frame",
+   "field": "height",
+   "index": 0
+  },
+  "dom": {
+   "id": "word-bank",
+   "field": "h",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "word bank radius (pt)",
+  "expect": 5.23,
+  "dom": {
+   "id": "word-bank",
+   "path": "frame.rx",
+   "unit": "px"
+  },
+  "tolerance": 0.3
+ },
+ {
+  "name": "word bank stroke (pt)",
+  "expect": 0.46,
+  "dom": {
+   "id": "word-bank",
+   "path": "frame.strokeWidth",
+   "unit": "px"
+  },
+  "tolerance": 0.03
+ },
+ {
+  "name": "word bank colour",
+  "expect": "#45a665",
+  "dom": {
+   "id": "word-bank",
+   "path": "frame.stroke",
+   "unit": "colour"
+  },
+  "tolerance": 0
+ }
+]

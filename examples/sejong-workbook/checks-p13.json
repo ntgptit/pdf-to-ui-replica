@@ -1,0 +1,86 @@
+[
+ {
+  "name": "match box left",
+  "pdf": {
+   "role": "frame",
+   "field": "x0",
+   "index": 1
+  },
+  "dom": {
+   "id": "match-pairs",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "match box top",
+  "pdf": {
+   "role": "frame",
+   "field": "top",
+   "index": 1
+  },
+  "dom": {
+   "id": "match-pairs",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 1.5
+ },
+ {
+  "name": "match box width",
+  "pdf": {
+   "role": "frame",
+   "field": "width",
+   "index": 1
+  },
+  "dom": {
+   "id": "match-pairs",
+   "field": "w",
+   "index": 0
+  },
+  "tolerance": 1.0
+ },
+ {
+  "name": "match box height",
+  "pdf": {
+   "role": "frame",
+   "field": "height",
+   "index": 1
+  },
+  "dom": {
+   "id": "match-pairs",
+   "field": "h",
+   "index": 0
+  },
+  "tolerance": 2.0
+ },
+ {
+  "name": "example box top",
+  "pdf": {
+   "role": "frame",
+   "field": "top",
+   "index": 2
+  },
+  "dom": {
+   "id": "example-box",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 1.5
+ },
+ {
+  "name": "example box height",
+  "pdf": {
+   "role": "frame",
+   "field": "height",
+   "index": 2
+  },
+  "dom": {
+   "id": "example-box",
+   "field": "h",
+   "index": 0
+  },
+  "tolerance": 1.0
+ }
+]

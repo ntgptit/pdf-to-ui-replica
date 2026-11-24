@@ -1,0 +1,114 @@
+[
+ {
+  "name": "hatch top (visible band)",
+  "pdf": {
+   "role": "hatch-ground",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "hatch",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "card left",
+  "pdf": {
+   "role": "card",
+   "field": "x0",
+   "index": 0
+  },
+  "dom": {
+   "id": "card",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "card top",
+  "pdf": {
+   "role": "card",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "card",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "card width",
+  "pdf": {
+   "role": "card",
+   "field": "width",
+   "index": 0
+  },
+  "dom": {
+   "id": "card",
+   "field": "w",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "bubble left",
+  "pdf": {
+   "role": "bubble-stroke",
+   "field": "x0",
+   "index": 0
+  },
+  "dom": {
+   "id": "bubble",
+   "field": "x",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "bubble top",
+  "pdf": {
+   "role": "bubble-stroke",
+   "field": "top",
+   "index": 0
+  },
+  "dom": {
+   "id": "bubble",
+   "field": "y",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "bubble right edge",
+  "pdf": {
+   "role": "bubble-stroke",
+   "field": "x1",
+   "index": 0
+  },
+  "dom": {
+   "id": "bubble",
+   "field": "right",
+   "index": 0
+  },
+  "tolerance": 0.6
+ },
+ {
+  "name": "bubble width",
+  "pdf": {
+   "role": "bubble-stroke",
+   "field": "width",
+   "index": 0
+  },
+  "dom": {
+   "id": "bubble",
+   "field": "w",
+   "index": 0
+  },
+  "tolerance": 0.6
+ }
+]

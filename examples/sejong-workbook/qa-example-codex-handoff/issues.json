@@ -1,0 +1,75 @@
+{
+  "next_id": 3,
+  "issues": [
+    {
+      "id": "ISS-001",
+      "page": 10,
+      "object_id": "OBJ-002",
+      "type": "layout",
+      "severity": "P2",
+      "description": "Heading bubble ends about 16 pt further right than the printed one (right end near x 263 pt vs 247 pt)",
+      "region": [
+        228.0,
+        81.0,
+        36.0,
+        42.0
+      ],
+      "status": "CODEX_READY",
+      "evidence": [
+        "pages/page-010/crops/v0/region-08.png"
+      ],
+      "cause": "Hypothesis: the bubble width follows the text width and the fallback heading face is wider than the printed rounded face; the printed bubble has a fixed measured width.",
+      "fix_plan": "Drive the bubble width from a measured token instead of the text width, then re-measure the right end",
+      "codex_prompt": "codex-prompts/p010-obj002-issue001.md",
+      "history": [
+        {
+          "run": "run-0",
+          "date": "2026-11-23",
+          "status": "OPEN",
+          "note": "found: Heading bubble ends about 16 pt further right than the printed one (right end near x 263 pt vs 247 pt)"
+        },
+        {
+          "run": "run-0",
+          "date": "2026-11-23",
+          "status": "CODEX_READY",
+          "note": "hard defect handed over in p010-obj002-issue001.md"
+        }
+      ]
+    },
+    {
+      "id": "ISS-002",
+      "page": 10,
+      "object_id": "OBJ-001",
+      "type": "character",
+      "severity": "P3",
+      "description": "Heading portrait is an original drawing, not the printed character",
+      "region": [
+        60.0,
+        78.0,
+        69.0,
+        36.0
+      ],
+      "status": "ACCEPTED_LIMITATION",
+      "evidence": [
+        "pages/page-010/crops/v0/region-07.png"
+      ],
+      "cause": "",
+      "fix_plan": "",
+      "codex_prompt": null,
+      "history": [
+        {
+          "run": "run-0",
+          "date": "2026-11-23",
+          "status": "OPEN",
+          "note": "found: Heading portrait is an original drawing, not the printed character"
+        },
+        {
+          "run": "run-0",
+          "date": "2026-11-23",
+          "status": "ACCEPTED_LIMITATION",
+          "note": "By design: the printed characters are copyrighted and are redrawn originally"
+        }
+      ]
+    }
+  ]
+}

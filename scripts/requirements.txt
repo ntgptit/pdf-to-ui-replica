@@ -1,0 +1,6 @@
+# Python (3.10+)
+pdfplumber>=0.10
+numpy>=1.24
+Pillow>=10
+pytest>=7     # tests only
+# System: poppler-utils (pdftoppm) for the PDF crops; Node 18+ with `npm i -D playwright` (and its browser) for the rebuilt page.

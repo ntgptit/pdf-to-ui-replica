@@ -1,0 +1,329 @@
+[
+ {
+  "name": "text-lines-header-1",
+  "box": [
+   84,
+   138,
+   372,
+   36
+  ],
+  "method": "lines",
+  "colour": "text"
+ },
+ {
+  "name": "text-lines-items-1",
+  "box": [
+   84,
+   208,
+   372,
+   112
+  ],
+  "method": "lines",
+  "colour": "text",
+  "centre": true
+ },
+ {
+  "name": "words-instruction",
+  "box": [
+   80,
+   140,
+   200,
+   16
+  ],
+  "method": "words",
+  "colour": "text"
+ },
+ {
+  "name": "words-caption",
+  "box": [
+   80,
+   158,
+   300,
+   12
+  ],
+  "method": "words",
+  "colour": "text"
+ },
+ {
+  "name": "text-lines-header-2",
+  "box": [
+   84,
+   338,
+   372,
+   36
+  ],
+  "method": "lines",
+  "colour": "text"
+ },
+ {
+  "name": "text-lines-items-2",
+  "box": [
+   84,
+   410,
+   372,
+   232
+  ],
+  "method": "lines",
+  "colour": "text",
+  "centre": true
+ },
+ {
+  "name": "letter-pitch-items-1",
+  "box": [
+   84,
+   208,
+   372,
+   112
+  ],
+  "method": "pitch",
+  "colour": "text"
+ },
+ {
+  "name": "letter-pitch-items-2",
+  "box": [
+   84,
+   410,
+   372,
+   232
+  ],
+  "method": "pitch",
+  "colour": "text"
+ },
+ {
+  "name": "letter-pitch-instruction",
+  "box": [
+   80,
+   140,
+   200,
+   16
+  ],
+  "method": "pitch",
+  "colour": "text"
+ },
+ {
+  "name": "tab-right-end",
+  "box": [
+   120,
+   20,
+   52,
+   48
+  ],
+  "method": "align",
+  "colour": "#45a665",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "hatch-after-tab",
+  "box": [
+   160,
+   50,
+   80,
+   18
+  ],
+  "method": "align",
+  "colour": "#fddb7d"
+ },
+ {
+  "name": "bubble-top-edge",
+  "box": [
+   100,
+   80,
+   40,
+   10
+  ],
+  "method": "align",
+  "colour": "#4f4c4d",
+  "tolerance_shift": 0.3,
+  "thickness": false
+ },
+ {
+  "name": "bubble-bottom-shadow",
+  "box": [
+   100,
+   106,
+   40,
+   14
+  ],
+  "method": "align",
+  "colour": "#4f4c4d",
+  "tolerance_shift": 0.3,
+  "thickness": false
+ },
+ {
+  "name": "bubble-tail",
+  "box": [
+   140,
+   100,
+   36,
+   26
+  ],
+  "method": "align",
+  "colour": "#4f4c4d",
+  "tolerance_shift": 0.4,
+  "thickness": false
+ },
+ {
+  "name": "rule-item-1",
+  "box": [
+   210,
+   216,
+   30,
+   12
+  ],
+  "method": "line",
+  "colour": "ink",
+  "tolerance_shift": 0.3,
+  "tolerance_thickness": 0.2
+ },
+ {
+  "name": "bubble-title",
+  "box": [
+   86,
+   86,
+   72,
+   18
+  ],
+  "method": "ink",
+  "colour": "#45a665"
+ },
+ {
+  "name": "tab-label",
+  "box": [
+   48,
+   32,
+   76,
+   24
+  ],
+  "method": "ink",
+  "colour": "any"
+ },
+ {
+  "name": "card-top-left",
+  "box": [
+   44,
+   124,
+   44,
+   30
+  ],
+  "method": "align",
+  "colour": "#a7a5a6",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "card-top-right",
+  "box": [
+   440,
+   124,
+   40,
+   30
+  ],
+  "method": "align",
+  "colour": "#a7a5a6",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "card-top-edge",
+  "box": [
+   120,
+   124,
+   40,
+   10
+  ],
+  "method": "align",
+  "colour": "#a7a5a6",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "card-left-edge",
+  "box": [
+   44,
+   200,
+   10,
+   40
+  ],
+  "method": "align",
+  "colour": "#a7a5a6",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "card-bottom-left",
+  "box": [
+   44,
+   630,
+   44,
+   30
+  ],
+  "method": "align",
+  "colour": "#a7a5a6",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "fold-corner",
+  "box": [
+   440,
+   628,
+   40,
+   32
+  ],
+  "method": "align",
+  "colour": "#a7a5a6",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "word-bank-left-end",
+  "box": [
+   78,
+   170,
+   36,
+   34
+  ],
+  "method": "align",
+  "colour": "#45a665",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "word-bank-right-end",
+  "box": [
+   420,
+   170,
+   38,
+   34
+  ],
+  "method": "align",
+  "colour": "#45a665",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "question-number",
+  "box": [
+   62,
+   138,
+   16,
+   20
+  ],
+  "method": "ink",
+  "colour": "#45a665"
+ },
+ {
+  "name": "instruction",
+  "box": [
+   80,
+   138,
+   100,
+   20
+  ],
+  "method": "ink",
+  "colour": "ink"
+ },
+ {
+  "name": "footer-number",
+  "box": [
+   44,
+   680,
+   20,
+   16
+  ],
+  "method": "ink",
+  "colour": "ink"
+ }
+]

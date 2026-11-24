@@ -1,0 +1,85 @@
+[
+ {
+  "name": "hatch-left-end",
+  "box": [
+   0,
+   50,
+   60,
+   18
+  ],
+  "method": "align",
+  "colour": "#fddb7d"
+ },
+ {
+  "name": "bubble-top-edge",
+  "box": [
+   108,
+   80,
+   40,
+   10
+  ],
+  "method": "align",
+  "colour": "#4f4c4d",
+  "tolerance_shift": 0.3,
+  "thickness": false
+ },
+ {
+  "name": "bubble-bottom-shadow",
+  "box": [
+   108,
+   106,
+   40,
+   14
+  ],
+  "method": "align",
+  "colour": "#4f4c4d",
+  "tolerance_shift": 0.3,
+  "thickness": false
+ },
+ {
+  "name": "running-head",
+  "box": [
+   330,
+   34,
+   160,
+   18
+  ],
+  "method": "ink",
+  "colour": "#45a665"
+ },
+ {
+  "name": "card-top-left",
+  "box": [
+   52,
+   124,
+   44,
+   30
+  ],
+  "method": "align",
+  "colour": "#a7a5a6",
+  "tolerance_shift": 0.3
+ },
+ {
+  "name": "footer-number",
+  "box": [
+   470,
+   680,
+   18,
+   16
+  ],
+  "method": "ink",
+  "colour": "ink"
+ },
+ {
+  "name": "bubble-title-ink",
+  "box": [
+   95,
+   84,
+   140,
+   22
+  ],
+  "method": "extent",
+  "colour": "#45a665",
+  "tolerance_shift": 1.0
+ }
+]

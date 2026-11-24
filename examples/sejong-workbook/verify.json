@@ -1,0 +1,47 @@
+{
+ "title": "Sejong workbook template: rebuilt lab pages vs the PDF",
+ "url": "http://localhost:5173/ui-kit/redesign/workbook-template",
+ "attr": "data-wb",
+ "rules": "roles.json",
+ "first_side": "left",
+ "zoom": 12,
+ "css_per_pt": 8,
+ "pages": [
+  {
+   "pdf_page": 9,
+   "sheet": 0,
+   "checks": "checks-p9.json",
+   "parts": "parts-p9.json",
+   "skip": {
+    "text_layout": "lab fixtures use original sample text, so the printed lines do not correspond line for line; a real replica of the book must run this layer"
+   }
+  },
+  {
+   "pdf_page": 10,
+   "sheet": 1,
+   "checks": "checks-p10.json",
+   "parts": "parts-p10.json",
+   "skip": {
+    "text_layout": "lab fixtures use original sample text, so the printed lines do not correspond line for line; a real replica of the book must run this layer"
+   }
+  },
+  {
+   "pdf_page": 11,
+   "sheet": 3,
+   "checks": "checks-p11.json",
+   "parts": "parts-p11.json",
+   "skip": {
+    "text_layout": "lab fixtures use original sample text, so the printed lines do not correspond line for line; a real replica of the book must run this layer"
+   }
+  },
+  {
+   "pdf_page": 13,
+   "sheet": 2,
+   "checks": "checks-p13.json",
+   "parts": "parts-p13.json",
+   "skip": {
+    "text_layout": "lab fixtures use original sample text, so the printed lines do not correspond line for line; a real replica of the book must run this layer"
+   }
+  }
+ ]
+}
