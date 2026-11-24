@@ -13,6 +13,7 @@ Numbers come from tools, never from eyeballing: geometry, colours (CMYK to sRGB)
 | **Measuring** (`shapes`, `signatures`, `roles`, `report`, `palette`, `lines`) | Vector shapes of a PDF page, recurring components, per-page invariants, a generated CSS palette |
 | **Verifying** (`verify`, `compare`, `zoom`, `text-layout`, `typography`, `tiles`) | Geometry in points, part-by-part zoom comparison, every text line (indent, spacing), typography scored per style (size, weight, family, indent, spacing: PASS ≥ 95 %, WARNING < 95 %, ERROR < 92 %), high-zoom tiles so small parts are not missed |
 | **Visual QA loop** (`visual-compare`, `issue`, `codex-prompt`, `codex-run`, `qa-report`) | Whole-page diff, defect register with a status lifecycle, repair loop with a failed-round cap, hand-off prompts for hard defects |
+| **Setup** (`init`) | Environment check with install commands, Stop hook registration, `.gitignore`, stack report |
 | **Harness** (`state`, `gate`, Stop hook) | Page statuses that only move through checks, five quality gates, a hook that blocks ending a session with unfinished pages |
 | **Artwork hand-off** (`artwork`) | Characters, objects and scenes are never copied: they are described (measured box, palette, identity, states, people with origin and skin tone), turned into a table prompt for another agent, delivered on a separate branch, then imported and validated |
 | **Reading view on phones** (`reflow`) | A second, readable view of the same content model, checked in a real browser at 320/360/390/768 px (overflow, text sizes, targets, zoom lock, block parity and order) |
@@ -29,22 +30,38 @@ The workflow, rules and lessons are in [`SKILL.md`](SKILL.md) and [`references/`
 - Vector PDFs measure best; scans only get visual analysis
 - Supported UI stack for builds: **React + shadcn/ui + Tailwind CSS v4** (`gate scope` refuses others for now). Analysis-only runs work for any project.
 
-## Install
+## Install (one command)
 
-As a Claude Code skill, clone this repository as the skill folder of your project:
+In the project you want to use it in (any repository, including a friend's):
 
 ```bash
 git clone <this repository> .claude/skills/pdf-to-ui-replica
-pip install -r .claude/skills/pdf-to-ui-replica/scripts/requirements.txt
+python3 .claude/skills/pdf-to-ui-replica/scripts/init.py
 ```
 
-To get the Stop hook that blocks ending a session with unfinished pages, merge `hooks/settings.example.json` into your project's `.claude/settings.json`. The hook is silent unless a build state file (`pdf-to-ui-output/ebook-state.json`) exists.
+`init.py` needs only Python 3.10+ (no packages yet). It:
+
+1. **checks the environment** and prints the exact install command for every gap: Python packages (`pdfplumber`, `numpy`, `Pillow`), `pdftoppm` (poppler), Node 18+, Playwright and its browser;
+2. **registers the Stop hook** in the project's `.claude/settings.json`: merged with what is already there, never twice, never overwriting (an invalid `settings.json` is left untouched and reported);
+3. **adds `pdf-to-ui-output/` and `.tmp/pdf-to-ui/` to `.gitignore`** (they hold page images of the book);
+4. **reports the UI stack** of the project: builds need React + shadcn/ui + Tailwind CSS v4; analysis works on any project.
+
+It installs nothing by itself and changes nothing else. Run it again at any time (idempotent); `--check` reports without writing; `--project <folder>` targets another project. After installing the missing tools, run it once more until it says "Ready". Claude Code then loads the skill from `.claude/skills/pdf-to-ui-replica/` automatically.
+
+Typical first run on a machine without the dependencies:
+
+```
+[MISSING] Python package numpy: missing
+            install: pip install -r .../scripts/requirements.txt
+[missing] Playwright: missing
+            install: in the project: npm i -D playwright   (needed for measuring the rebuilt page)
+```
 
 Run the tools from the `scripts/` folder:
 
 ```bash
 cd .claude/skills/pdf-to-ui-replica/scripts
-PYTHONPATH=. python3 -m pdfmeasure --help
+PYTHONPATH=. python3 -m pdfmeasure --help        # also: python3 -m pdfmeasure init
 ```
 
 ## Quick start
@@ -87,8 +104,9 @@ SKILL.md              the skill: workflow, rules, decisions taken without asking
 references/          phase documents, harness, artwork, reflow, stack recipe, module layout, knowhow register
 scripts/pdfmeasure/  the Python toolkit (python3 -m pdfmeasure <command>)
 scripts/*.cjs        Playwright helpers (DOM measuring, crops, reflow, kit consistency)
-scripts/tests/       pytest suite (159 tests)
-hooks/               Stop hook and a settings.json example
+scripts/init.py      one-command setup of the skill in a project
+scripts/tests/       pytest suite
+hooks/               the Stop hook (registered by init)
 examples/            configs and QA results of one real run (no PDF, no page images)
 ```
 

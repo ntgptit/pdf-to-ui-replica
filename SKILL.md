@@ -25,6 +25,9 @@ These come up in every build. Decide them yourself by the rule below, apply it, 
 | Output kind | `web-fixed`, the default: desktop (print sheet) and mobile (reading view) are **both** required and built together. `reflow --auto-url` must show the reading view at 360 px and the sheet at 1280 and 1920 px. |
 | Text of the sample pages | Write original sample content for the lab and tests (never the book's text in the repository). Real book content reaches a product only through the product's content source at run time (database, import, CMS), never committed. |
 
+## Setup in a project (once)
+`python3 <skill folder>/scripts/init.py` (Python 3.10+ only): checks the environment and prints the install command for each gap, registers the Stop hook in the project's `.claude/settings.json` (merged, idempotent), adds the output folders to `.gitignore`, reports whether the UI stack is supported. `--check` writes nothing. Run it when the skill is first used in a repository, and tell the user what it reported.
+
 ## What you need
 - `pdfplumber`, `numpy`, `Pillow` (Python 3.10+), `pdftoppm` (poppler-utils), Node 18+ with `playwright` (+ its browser). `scripts/requirements.txt`.
 - A dev server that renders your rebuilt pages (any framework) with `data-wb="<id>"` style attributes on measurable elements (see `references/05-build.md`).

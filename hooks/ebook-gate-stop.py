@@ -14,7 +14,7 @@ from pathlib import Path
 
 MAX_BLOCKS = 4
 SKILL_SCRIPTS = Path('.claude/skills/pdf-to-ui-replica/scripts')  # fallback when the hook is not inside the skill folder
-OWN_SCRIPTS = Path(__file__).resolve().parent.parent / 'scripts'  # the skill's own scripts, when this hook lives in <skill>/hooks/
+OWN_SCRIPTS = Path(__file__).resolve().parent.parent / 'scripts'  # the skill's own scripts: this hook lives in <skill>/hooks/
 
 
 def main() -> int:

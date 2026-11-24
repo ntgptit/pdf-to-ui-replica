@@ -335,7 +335,7 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--url")
     verify.add_argument("--out", required=True, help="directory for geometry.md and zoom.md")
 
-    from . import artwork, consistency, knowhow, qa_cli, reflow, state_cli, structure, tiles, typography
+    from . import artwork, consistency, knowhow, qa_cli, reflow, setup_project, state_cli, structure, tiles, typography
 
     qa_cli.register(add)
     state_cli.register(add)
@@ -346,6 +346,7 @@ def build_parser() -> argparse.ArgumentParser:
     structure.register(add)
     knowhow.register(add)
     consistency.register(add)
+    setup_project.register(add)
     return parser
 
 
