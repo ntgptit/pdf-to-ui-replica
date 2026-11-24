@@ -32,21 +32,34 @@ The workflow, rules and lessons are in [`SKILL.md`](SKILL.md) and [`references/`
 
 ## Install (one command)
 
-In the project you want to use it in (any repository, including a friend's):
+Run this in the project you want to use the skill in (any repository):
 
 ```bash
-git clone <this repository> .claude/skills/pdf-to-ui-replica
-python3 .claude/skills/pdf-to-ui-replica/scripts/init.py
+# private repository: uses your `gh` login
+gh api repos/ntgptit/pdf-to-ui-replica/contents/install.sh -H "Accept: application/vnd.github.raw" | sh
+
+# public repository
+curl -fsSL https://raw.githubusercontent.com/ntgptit/pdf-to-ui-replica/main/install.sh | sh
 ```
 
-`init.py` needs only Python 3.10+ (no packages yet). It:
+`install.sh` (POSIX `sh`: Linux, macOS, Git Bash on Windows) does two things:
 
-1. **checks the environment** and prints the exact install command for every gap: Python packages (`pdfplumber`, `numpy`, `Pillow`), `pdftoppm` (poppler), Node 18+, Playwright and its browser;
-2. **registers the Stop hook** in the project's `.claude/settings.json`: merged with what is already there, never twice, never overwriting (an invalid `settings.json` is left untouched and reported);
-3. **adds `pdf-to-ui-output/` and `.tmp/pdf-to-ui/` to `.gitignore`** (they hold page images of the book);
-4. **reports the UI stack** of the project: builds need React + shadcn/ui + Tailwind CSS v4; analysis works on any project.
+1. **installs the skill** into `.claude/skills/pdf-to-ui-replica/`: with `npx skills` when `npx` exists (the same way other skills are installed), otherwise with `git clone`;
+2. **runs `scripts/init.py`**, which:
+   - **checks the environment** and prints the exact install command for every gap: Python packages (`pdfplumber`, `numpy`, `Pillow`), `pdftoppm` (poppler), Node 18+, Playwright and its browser;
+   - **registers the Stop hook** in the project's `.claude/settings.json`: merged with what is already there, never twice, never overwriting (an invalid `settings.json` is left untouched and reported);
+   - **adds `pdf-to-ui-output/` and `.tmp/pdf-to-ui/` to `.gitignore`** (they hold page images of the book);
+   - **reports the UI stack** of the project: builds need React + shadcn/ui + Tailwind CSS v4; analysis works on any project.
 
-It installs nothing by itself and changes nothing else. Run it again at any time (idempotent); `--check` reports without writing; `--project <folder>` targets another project. After installing the missing tools, run it once more until it says "Ready". Claude Code then loads the skill from `.claude/skills/pdf-to-ui-replica/` automatically.
+Options: `--project DIR` (default: the current directory), `--repo OWNER/REPO` (install from another copy), `--update` (replace an installed copy with the latest). Pass them after `sh -s --`, e.g. `... | sh -s -- --update`. It needs Python 3.10+ and either `npx` or `git`; it installs no system packages. Run it again at any time (idempotent); once the missing tools are installed, run `python3 .claude/skills/pdf-to-ui-replica/scripts/init.py` until it says "Ready". Claude Code then loads the skill from `.claude/skills/pdf-to-ui-replica/` automatically. A private repository needs a GitHub login on the machine (`gh auth login` or an SSH key).
+
+Other ways to install:
+
+```bash
+npx skills@1.7.6 add ntgptit/pdf-to-ui-replica --agent claude-code -y     # installs the skill only
+git clone https://github.com/ntgptit/pdf-to-ui-replica .claude/skills/pdf-to-ui-replica   # same
+python3 .claude/skills/pdf-to-ui-replica/scripts/init.py                  # then: setup (--check reports only, --project DIR targets another project)
+```
 
 Typical first run on a machine without the dependencies:
 
@@ -104,7 +117,8 @@ SKILL.md              the skill: workflow, rules, decisions taken without asking
 references/          phase documents, harness, artwork, reflow, stack recipe, module layout, knowhow register
 scripts/pdfmeasure/  the Python toolkit (python3 -m pdfmeasure <command>)
 scripts/*.cjs        Playwright helpers (DOM measuring, crops, reflow, kit consistency)
-scripts/init.py      one-command setup of the skill in a project
+install.sh            one-command install + setup (npx or git, then init.py)
+scripts/init.py      setup of the skill in a project
 scripts/tests/       pytest suite
 hooks/               the Stop hook (registered by init)
 examples/            configs and QA results of one real run (no PDF, no page images)
