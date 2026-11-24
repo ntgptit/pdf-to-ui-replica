@@ -30,36 +30,23 @@ The workflow, rules and lessons are in [`SKILL.md`](SKILL.md) and [`references/`
 - Vector PDFs measure best; scans only get visual analysis
 - Supported UI stack for builds: **React + shadcn/ui + Tailwind CSS v4** (`gate scope` refuses others for now). Analysis-only runs work for any project.
 
-## Install (one command)
+## Install
 
-Run this in the project you want to use the skill in (any repository):
-
-```bash
-# private repository: uses your `gh` login
-gh api repos/ntgptit/pdf-to-ui-replica/contents/install.sh -H "Accept: application/vnd.github.raw" | sh
-
-# public repository
-curl -fsSL https://raw.githubusercontent.com/ntgptit/pdf-to-ui-replica/main/install.sh | sh
-```
-
-`install.sh` (POSIX `sh`: Linux, macOS, Git Bash on Windows) does two things:
-
-1. **installs the skill** into `.claude/skills/pdf-to-ui-replica/`: with `npx skills` when `npx` exists (the same way other skills are installed), otherwise with `git clone`;
-2. **runs `scripts/init.py`**, which:
-   - **checks the environment** and prints the exact install command for every gap: Python packages (`pdfplumber`, `numpy`, `Pillow`), `pdftoppm` (poppler), Node 18+, Playwright and its browser;
-   - **registers the Stop hook** in the project's `.claude/settings.json`: merged with what is already there, never twice, never overwriting (an invalid `settings.json` is left untouched and reported);
-   - **adds `pdf-to-ui-output/` and `.tmp/pdf-to-ui/` to `.gitignore`** (they hold page images of the book);
-   - **reports the UI stack** of the project: builds need React + shadcn/ui + Tailwind CSS v4; analysis works on any project.
-
-Options: `--project DIR` (default: the current directory), `--repo OWNER/REPO` (install from another copy), `--update` (replace an installed copy with the latest). Pass them after `sh -s --`, e.g. `... | sh -s -- --update`. It needs Python 3.10+ and either `npx` or `git`; it installs no system packages. Run it again at any time (idempotent); once the missing tools are installed, run `python3 .claude/skills/pdf-to-ui-replica/scripts/init.py` until it says "Ready". Claude Code then loads the skill from `.claude/skills/pdf-to-ui-replica/` automatically. A private repository needs a GitHub login on the machine (`gh auth login` or an SSH key).
-
-Other ways to install:
+Works on Windows, Linux and macOS. Run in the project you want to use the skill in:
 
 ```bash
-npx skills@1.7.6 add ntgptit/pdf-to-ui-replica --agent claude-code -y     # installs the skill only
-git clone https://github.com/ntgptit/pdf-to-ui-replica .claude/skills/pdf-to-ui-replica   # same
-python3 .claude/skills/pdf-to-ui-replica/scripts/init.py                  # then: setup (--check reports only, --project DIR targets another project)
+npx skills@1.7.6 add ntgptit/pdf-to-ui-replica --agent claude-code -y
+python .claude/skills/pdf-to-ui-replica/scripts/init.py      # Windows: py ...; Linux/macOS: python3 ...
 ```
+
+The first line installs the skill into `.claude/skills/pdf-to-ui-replica/` (Claude Code loads it from there). The second line is the setup (`init`, Python 3.10+):
+
+- **checks the environment** and prints the exact install command for every gap: Python packages (`pdfplumber`, `numpy`, `Pillow`), `pdftoppm` (poppler), Node 18+, Playwright and its browser;
+- **registers the Stop hook** in the project's `.claude/settings.json` (merged, never twice, never overwriting);
+- **adds `pdf-to-ui-output/` and `.tmp/pdf-to-ui/` to `.gitignore`** (they hold page images of the book);
+- **reports the UI stack**: builds need React + shadcn/ui + Tailwind CSS v4; analysis works on any project.
+
+Run `init` again after installing the missing tools until it says "Ready". Options: `--check` (report only), `--project DIR`. To update the skill, run the `npx` line again. A private repository needs a GitHub login on the machine.
 
 Typical first run on a machine without the dependencies:
 
@@ -117,7 +104,6 @@ SKILL.md              the skill: workflow, rules, decisions taken without asking
 references/          phase documents, harness, artwork, reflow, stack recipe, module layout, knowhow register
 scripts/pdfmeasure/  the Python toolkit (python3 -m pdfmeasure <command>)
 scripts/*.cjs        Playwright helpers (DOM measuring, crops, reflow, kit consistency)
-install.sh            one-command install + setup (npx or git, then init.py)
 scripts/init.py      setup of the skill in a project
 scripts/tests/       pytest suite
 hooks/               the Stop hook (registered by init)
