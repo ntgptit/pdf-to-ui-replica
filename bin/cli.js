@@ -61,7 +61,7 @@ function main() {
   if (options.check) {
     if (!fs.existsSync(path.join(destination, 'SKILL.md'))) root = source
   } else {
-    console.log(`${NAME}: ${install(source, destination, options.update)} (${destination})`)
+    process.env.PDF_TO_UI_INSTALL = `${install(source, destination, options.update)} in .claude/skills/${NAME}`
   }
   const args = [...python.slice(1), path.join(root, 'scripts', 'init.py'), '--project', options.project]
   if (options.check) args.push('--check')
@@ -71,6 +71,7 @@ function main() {
 try {
   process.exitCode = main()
 } catch (error) {
-  console.error(`${NAME}: ${error.message}`)
+  const red = (text) => (process.stderr.isTTY && !process.env.NO_COLOR ? `\x1b[31m${text}\x1b[0m` : text)
+  console.error(`\n  ${red('x')} ${NAME}: ${error.message}\n`)
   process.exitCode = 2
 }

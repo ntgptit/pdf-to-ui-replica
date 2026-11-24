@@ -154,5 +154,5 @@ def test_the_entry_script_runs_without_importing_the_rest_of_the_toolkit(tmp_pat
         (skill / "scripts" / "pdfmeasure" / module).write_text((SCRIPTS / "pdfmeasure" / module).read_text())
     run = subprocess.run([sys.executable, "-S", str(skill / "scripts" / "init.py"), "--check"], capture_output=True, text=True, check=False)  # -S: no site-packages, like a machine without numpy
     assert run.returncode in (0, 1), run.stderr[-300:]
-    assert "pdf-to-ui-replica init" in run.stdout and "Python package numpy" in run.stdout and "Stop hook" in run.stdout
+    assert "pdf-to-ui-replica" in run.stdout and "Python package numpy" in run.stdout and "Stop hook" in run.stdout
     assert not (tmp_path / ".claude" / "settings.json").exists()

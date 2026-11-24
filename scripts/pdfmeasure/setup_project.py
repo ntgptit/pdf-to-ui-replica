@@ -160,39 +160,91 @@ def run_init(project: Path, skill: Path | None = None, write: bool = True, **env
     return result
 
 
-def format_report(result: dict) -> str:
-    lines = [f"pdf-to-ui-replica init: project {result['project']}" + ("" if result["wrote"] else "  (--check: nothing was written)"), ""]
-    lines.append("Environment")
+class Style:
+    """Console look: colour only on a terminal (and never with NO_COLOR), symbols fall back to ASCII where the console cannot print them."""
+
+    def __init__(self, color: bool = False, unicode: bool = False):
+        self.color, self.unicode = color, unicode
+        self.ok, self.fail, self.warn, self.arrow, self.dot = ("✓", "✗", "!", "→", "·") if unicode else ("+", "x", "!", "->", "-")
+
+    def _paint(self, code: str, text: str) -> str:
+        return f"\033[{code}m{text}\033[0m" if self.color else text
+
+    def bold(self, text): return self._paint("1", text)
+    def dim(self, text): return self._paint("2", text)
+    def green(self, text): return self._paint("32", text)
+    def red(self, text): return self._paint("31", text)
+    def yellow(self, text): return self._paint("33", text)
+    def cyan(self, text): return self._paint("36", text)
+
+
+def make_style(stream=None, env=None) -> Style:
+    import os
+
+    stream = stream or sys.stdout
+    env = os.environ if env is None else env
+    tty = bool(getattr(stream, "isatty", lambda: False)())
+    color = (tty or bool(env.get("FORCE_COLOR"))) and not env.get("NO_COLOR") and env.get("TERM") != "dumb"
+    unicode = not env.get("PDF_TO_UI_ASCII") and env.get("TERM") != "dumb"
+    try:
+        "✓✗→·".encode(getattr(stream, "encoding", None) or "ascii")
+    except (UnicodeEncodeError, LookupError):
+        unicode = False
+    if color and sys.platform == "win32":
+        os.system("")  # switches the Windows console to ANSI escape handling
+    return Style(color, unicode)
+
+
+def _relative(path: str, project: str) -> str:
+    try:
+        return Path(path).resolve().relative_to(Path(project).resolve()).as_posix()
+    except ValueError:
+        return path
+
+
+def format_report(result: dict, style: Style | None = None) -> str:
+    st = style or Style()
+    mark = {"ok": st.green(st.ok), "fail": st.red(st.fail), "warn": st.yellow(st.warn)}
+    out: list[str] = ["", f"  {st.bold('pdf-to-ui-replica')} init" + (st.dim("   --check: nothing was written") if not result["wrote"] else ""), f"  {st.dim(result['project'])}", ""]
+    width = max(len(item["name"]) for item in result["environment"])
+    out.append(f"  {st.bold('Environment')}")
     for item in result["environment"]:
-        mark = "ok     " if item["ok"] else ("MISSING" if item["required"] else "missing")
-        lines.append(f"  [{mark}] {item['name']}: {item['detail']}")
+        level = "ok" if item["ok"] else ("fail" if item["required"] else "warn")
+        out.append(f"    {mark[level]} {item['name'].ljust(width)}  {st.dim(item['detail'])}")
         if not item["ok"]:
-            lines.append(f"            install: {item['fix']}" + (f"   (needed for {item['needed_for']})" if item["needed_for"] else ""))
-    hook = result["hook"]
+            out.append(f"        {st.cyan(st.arrow)} {item['fix']}")
+            if item["needed_for"]:
+                out.append(f"          {st.dim('needed for ' + item['needed_for'])}")
+    hook, gitignore, found = result["hook"], result["gitignore"], result["stack"]
     verb = {"added": "would register" if not result["wrote"] else "registered", "present": "already registered"}[hook["state"]]
-    lines += ["", f"Stop hook: {verb} in {hook['file']}", f"  {hook['command']}"]
-    gitignore = result["gitignore"]
-    if gitignore["added"]:
-        lines.append(f"\n.gitignore: {'would add' if not result['wrote'] else 'added'} {', '.join(gitignore['added'])}")
-    else:
-        lines.append("\n.gitignore: already up to date")
-    found = result["stack"]
+    import os
+
+    out += ["", f"  {st.bold('Project')}"]
+    if os.environ.get("PDF_TO_UI_INSTALL"):  # set by `npx pdf-to-ui-replica init` (bin/cli.js)
+        out.append(f"    {mark['ok']} {'Skill'.ljust(11)} {os.environ['PDF_TO_UI_INSTALL']}")
+    out += [f"    {mark['ok']} {'Stop hook'.ljust(11)} {verb} in {_relative(hook['file'], result['project'])}", f"        {st.dim(hook['command'])}"]
+    out.append(f"    {mark['ok']} {'.gitignore'.ljust(11)} " + (f"{'would add' if not result['wrote'] else 'added'} {', '.join(gitignore['added'])}" if gitignore["added"] else "already up to date"))
     if found["supported"]:
-        lines.append(f"\nUI stack: {stack.SUPPORTED} found in {found['app']}: builds are supported.")
+        out.append(f"    {mark['ok']} {'UI stack'.ljust(11)} {stack.SUPPORTED} found in {found['app']}: builds are supported")
     else:
-        lines.append(f"\nUI stack: {stack.SUPPORTED} not found ({'; '.join(found['reasons'])}).\n  Analysis (inventory, measuring, verifying a page) works on any project; building pages needs this stack for now.")
+        out += [f"    {mark['warn']} {'UI stack'.ljust(11)} {stack.SUPPORTED} not found ({'; '.join(found['reasons'])})", f"        {st.dim('Analysis (inventory, measuring, verifying a page) works on any project; building pages needs this stack for now.')}"]
     for warning in result["warnings"]:
-        lines.append(f"\nWARNING: {warning}")
+        out += ["", f"  {mark['warn']} {st.yellow(warning)}"]
     required_missing = [item["name"] for item in result["environment"] if item["required"] and not item["ok"]]
     later = [item["name"] for item in result["environment"] if not item["required"] and not item["ok"]]
-    lines.append("")
+    out.append("")
     if required_missing:
-        lines.append(f"Install the missing required tools first: {', '.join(required_missing)}.")
+        out.append(f"  {mark['fail']} {st.bold(st.red('Not ready'))}  install the missing required tools first: {', '.join(required_missing)}")
+    else:
+        out.append(f"  {mark['ok']} {st.bold(st.green('Ready'))}")
     if later:
-        lines.append(f"Needed before you measure a rebuilt page: {', '.join(later)}.")
+        out.append(f"    {st.dim('Needed before you measure a rebuilt page: ' + ', '.join(later))}")
     if not required_missing:
-        lines.append("Ready. Start a build:\n  cd " + str(Path(result["skill"]) / "scripts") + "\n  PYTHONPATH=. python3 -m pdfmeasure state init --output <out> --pages <first>-<last> --pilot <p1,p2,p3> --root " + result["project"])
-    return "\n".join(lines)
+        scripts = str(Path(result["skill"]) / "scripts")
+        out += ["", f"  {st.bold('Next')}  start a build", f"    cd {scripts}", f"    PYTHONPATH=. python3 -m pdfmeasure state init --output <out> --pages <first>-<last> --pilot <p1,p2,p3> --root {result['project']}"]
+    else:
+        out += ["", f"  {st.bold('Next')}  run this command again after installing"]
+    return "\n".join(out) + "\n"
 
 
 def command_init(args) -> int:
@@ -206,7 +258,7 @@ def command_init(args) -> int:
     except InitError as error:
         print(f"init: {error}")
         return 2
-    print(format_report(result))
+    print(format_report(result, make_style()))
     return 0 if result["ok"] else 1
 
 
