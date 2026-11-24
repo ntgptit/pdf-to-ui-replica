@@ -156,3 +156,70 @@ def test_the_entry_script_runs_without_importing_the_rest_of_the_toolkit(tmp_pat
     assert run.returncode in (0, 1), run.stderr[-300:]
     assert "pdf-to-ui-replica" in run.stdout and "Python package numpy" in run.stdout and "Stop hook" in run.stdout
     assert not (tmp_path / ".claude" / "settings.json").exists()
+
+
+# ---- installing what is missing -------------------------------------------------------------------------------------------------------
+class Runner:
+    def __init__(self, fail=()):
+        self.calls, self.fail = [], fail
+
+    def __call__(self, command, **kwargs):
+        self.calls.append(command)
+        bad = any(word in " ".join(command) for word in self.fail)
+        return Finished("", "boom: no network\nERROR: could not install" if bad else "", 1 if bad else 0)
+
+
+def Finished(out, err, code):
+    return type("Done", (), {"stdout": out, "stderr": err, "returncode": code})()
+
+
+def missing(*names):
+    return [{"name": name, "ok": False, "detail": "missing", "fix": "", "required": True, "needed_for": ""} for name in names]
+
+
+def which_all(name):
+    return f"/bin/{name}"
+
+
+def test_install_missing_pip_packages_and_playwright(tmp_path):
+    runner = Runner()
+    steps = sp.install_missing(missing("Python package numpy", "Python package Pillow", "Playwright", "Playwright browser"), tmp_path, which=which_all, run=runner, python="PY")
+    commands = [" ".join(call) for call in runner.calls]
+    assert commands[0] == "PY -m pip install --disable-pip-version-check numpy>=1.24 Pillow>=10"
+    assert "/bin/npm install --no-save --no-package-lock --no-audit --no-fund --prefix" in commands[1] and commands[1].endswith("playwright")
+    assert commands[2] == "/bin/npx playwright install chromium" and all(step["ok"] for step in steps)
+
+
+def test_install_missing_never_installs_machine_tools_and_stops_on_failure(tmp_path):
+    runner = Runner()
+    assert sp.install_missing(missing("Python", "poppler (pdftoppm)", "Node"), tmp_path, which=which_all, run=runner) == [] and runner.calls == []
+    runner = Runner(fail=("npm",))
+    steps = sp.install_missing(missing("Playwright", "Playwright browser"), tmp_path, which=which_all, run=runner)
+    assert len(steps) == 1 and not steps[0]["ok"] and "no network" in steps[0]["detail"]   # no browser download after a failed npm install
+    assert sp.install_missing(missing("Playwright"), tmp_path, which=lambda name: None, run=Runner()) == []   # no Node: nothing to do
+
+
+def test_run_init_installs_then_rechecks_and_check_mode_skips(tmp_path):
+    project = tmp_path / "proj"
+    project.mkdir()
+    skill = install_skill(project)
+    installed = {"yes": False}
+
+    def find_spec(name):
+        return object() if installed["yes"] or name != "numpy" else None
+
+    def run(command, **kwargs):
+        if "pip" in command:
+            installed["yes"] = True
+        return Finished("v22.0.0\n" + sys.executable if "node" in command[0] else "", "", 0)
+
+    env = dict(which=which_all, run=run, find_spec=find_spec)
+    result = sp.run_init(project, skill, write=True, install=True, installer={"which": which_all, "run": run}, **env)
+    assert [step["name"] for step in result["installed"]] == ["Python packages: numpy"]
+    assert next(item for item in result["environment"] if item["name"] == "Python package numpy")["ok"]
+    assert "Installed" in sp.format_report(result) and "Python packages: numpy" in sp.format_report(result)
+    installed["yes"] = False
+    skipped = sp.run_init(project, skill, write=False, install=True, installer={"which": which_all, "run": run}, **env)
+    assert skipped["installed"] == []
+    failed = sp.run_init(project, skill, write=True, install=True, installer={"which": which_all, "run": Runner(fail=("pip",))}, **env)
+    assert "run it yourself: " in sp.format_report(failed) and "pip install" in sp.format_report(failed)

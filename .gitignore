@@ -4,3 +4,4 @@ __pycache__/
 .tmp/
 pdf-to-ui-output/
 *.pdf
+node_modules/

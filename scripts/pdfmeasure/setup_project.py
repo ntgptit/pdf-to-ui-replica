@@ -3,11 +3,11 @@
   python3 .claude/skills/pdf-to-ui-replica/scripts/init.py [--project <repo>] [--check]
 
 What it does (every step is idempotent; --check reports without writing):
-  1. checks the environment: Python, pdfplumber, numpy, Pillow, pdftoppm, Node, Playwright and its browser; prints the exact install command for each gap
+  1. checks the environment: Python, pdfplumber, numpy, Pillow, pdftoppm, Node, Playwright and its browser; installs the missing libraries, prints the exact install command for the missing tools
   2. registers the Stop hook in <project>/.claude/settings.json (merged: existing hooks and settings stay; nothing is added twice)
   3. adds pdf-to-ui-output/ and .tmp/pdf-to-ui/ to <project>/.gitignore (they hold page images of the book)
   4. reports whether the project's UI stack is supported for builds (React + shadcn/ui + Tailwind CSS v4); analysis works on any project
-It never installs packages itself and never touches anything else in the project.
+Missing libraries are installed (pip packages; Playwright and its Chromium inside this skill's scripts/ folder); pass --no-install to skip. Tools of the machine (Python, poppler, Node) are never installed: the report prints the command. Nothing else in the project is touched.
 """
 from __future__ import annotations
 
@@ -25,6 +25,8 @@ HOOK_FILE = "ebook-gate-stop.py"
 GITIGNORE_LINES = ("pdf-to-ui-output/", ".tmp/pdf-to-ui/")
 GITIGNORE_HEADER = "# pdf-to-ui-replica: output and run folders hold page images of the book (never commit them)"
 PYTHON_MODULES = (("pdfplumber", "pdfplumber"), ("numpy", "numpy"), ("PIL", "Pillow"))
+PIP_SPECS = {"pdfplumber": "pdfplumber>=0.10", "numpy": "numpy>=1.24", "Pillow": "Pillow>=10"}
+INSTALL_TIMEOUT = 1200  # seconds: the Chromium download is large
 MIN_PYTHON = (3, 10)
 MIN_NODE = 18
 
@@ -79,9 +81,41 @@ def check_environment(scripts: Path, which=shutil.which, run=subprocess.run, fin
             browser_ok = bool(executable) and Path(executable).exists()
             browser_detail = executable if browser_ok else "browser not installed"
     needs = "measuring the rebuilt page"
-    checks.append(_check("Playwright", playwright_ok, "found" if playwright_ok else "missing", "in the project: npm i -D playwright", required=False, needed_for=needs))
+    checks.append(_check("Playwright", playwright_ok, "found" if playwright_ok else "missing", "npm i -D playwright (init installs it inside the skill folder)", required=False, needed_for=needs))
     checks.append(_check("Playwright browser", browser_ok, browser_detail, "npx playwright install chromium", required=False, needed_for=needs))
     return checks
+
+
+# ---- 1b. install what is missing ---------------------------------------------------------------------------------------------------------
+def _tail(text: str, lines: int = 3) -> str:
+    kept = [line.strip() for line in (text or "").strip().splitlines() if line.strip()]
+    return " | ".join(kept[-lines:])
+
+
+def _step(name: str, command: list[str], cwd: Path | None, run, progress) -> dict:
+    progress(name)
+    try:
+        done = run(command, capture_output=True, text=True, check=False, cwd=cwd, timeout=INSTALL_TIMEOUT)
+        ok, detail = done.returncode == 0, "" if done.returncode == 0 else _tail(done.stderr or done.stdout)
+    except (OSError, subprocess.TimeoutExpired) as error:
+        ok, detail = False, str(error)
+    return {"name": name, "ok": ok, "detail": detail, "command": " ".join(command)}
+
+
+def install_missing(checks: list[dict], scripts: Path, which=shutil.which, run=subprocess.run, progress=lambda text: None, python: str | None = None) -> list[dict]:
+    """Install the libraries the checks found missing: Python packages (pip), Playwright (npm, inside the skill's scripts/ folder, so the project's package.json stays untouched) and its Chromium. Tools of the machine (Python, poppler, Node) are never installed."""
+    failed = {item["name"] for item in checks if not item["ok"]}
+    done: list[dict] = []
+    packages = [package for _, package in PYTHON_MODULES if f"Python package {package}" in failed]
+    if packages:
+        done.append(_step(f"Python packages: {', '.join(packages)}", [python or sys.executable, "-m", "pip", "install", "--disable-pip-version-check", *[PIP_SPECS[name] for name in packages]], None, run, progress))
+    node, npm, npx = which("node"), which("npm"), which("npx")
+    if node and npm and "Playwright" in failed:
+        done.append(_step("Playwright (npm, in the skill's scripts folder)", [npm, "install", "--no-save", "--no-package-lock", "--no-audit", "--no-fund", "--prefix", str(scripts), "playwright"], scripts, run, progress))
+    if node and npx and ("Playwright" in failed or "Playwright browser" in failed) and not (done and done[-1]["name"].startswith("Playwright (npm") and not done[-1]["ok"]):
+        done.append(_step("Chromium browser for Playwright", [npx, "playwright", "install", "chromium"], scripts, run, progress))
+    importlib.invalidate_caches()
+    return done
 
 
 # ---- 2. hook -----------------------------------------------------------------------------------------------------------------------------
@@ -140,7 +174,7 @@ def install_gitignore(project: Path, write: bool) -> dict:
 
 
 # ---- run ---------------------------------------------------------------------------------------------------------------------------------
-def run_init(project: Path, skill: Path | None = None, write: bool = True, **environment) -> dict:
+def run_init(project: Path, skill: Path | None = None, write: bool = True, install: bool = False, progress=lambda text: None, installer: dict | None = None, **environment) -> dict:
     skill = (skill or skill_dir()).resolve()
     project = project.resolve()
     if not project.is_dir():
@@ -152,6 +186,11 @@ def run_init(project: Path, skill: Path | None = None, write: bool = True, **env
     if not (skill / "SKILL.md").is_file():
         raise InitError(f"{skill} has no SKILL.md: not a skill folder")
     result["environment"] = check_environment(skill / "scripts", **environment)
+    result["installed"] = []
+    if install and write and any(not item["ok"] for item in result["environment"]):
+        result["installed"] = install_missing(result["environment"], skill / "scripts", progress=progress, **(installer or {}))
+        if result["installed"]:
+            result["environment"] = check_environment(skill / "scripts", **environment)
     result["hook"] = install_hook(skill, project, write)
     result["gitignore"] = install_gitignore(project, write)
     result["stack"] = stack.detect(project)
@@ -206,6 +245,13 @@ def format_report(result: dict, style: Style | None = None) -> str:
     st = style or Style()
     mark = {"ok": st.green(st.ok), "fail": st.red(st.fail), "warn": st.yellow(st.warn)}
     out: list[str] = ["", f"  {st.bold('pdf-to-ui-replica')} init" + (st.dim("   --check: nothing was written") if not result["wrote"] else ""), f"  {st.dim(result['project'])}", ""]
+    if result.get("installed"):
+        out.append(f"  {st.bold('Installed')}")
+        for step in result["installed"]:
+            out.append(f"    {mark['ok' if step['ok'] else 'fail']} {step['name']}")
+            if not step["ok"]:
+                out += [f"        {st.dim(step['detail'] or 'the command failed')}", f"        {st.cyan(st.arrow)} run it yourself: {step['command']}"]
+        out.append("")
     width = max(len(item["name"]) for item in result["environment"])
     out.append(f"  {st.bold('Environment')}")
     for item in result["environment"]:
@@ -254,7 +300,8 @@ def command_init(args) -> int:
         print(f"init: the skill is not inside <project>/.claude/skills/; give the project with --project <folder> (skill at {skill})")
         return 2
     try:
-        result = run_init(project, skill, write=not args.check)
+        style = make_style()
+        result = run_init(project, skill, write=not args.check, install=not (args.check or args.no_install), progress=lambda text: print(f"  {style.cyan(style.arrow)} installing {text} ...", flush=True))
     except InitError as error:
         print(f"init: {error}")
         return 2
@@ -266,6 +313,7 @@ def register(add) -> None:
     cmd = add("init", command_init, "put the skill to work in a project: check the environment, register the Stop hook, update .gitignore, report the UI stack")
     cmd.add_argument("--project", help="the project folder (default: the project this skill is installed in)")
     cmd.add_argument("--check", action="store_true", help="report only, write nothing")
+    cmd.add_argument("--no-install", action="store_true", help="do not install missing libraries (pip packages, Playwright and its browser)")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -275,4 +323,5 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="init.py", description="Put the pdf-to-ui-replica skill to work in a project.")
     parser.add_argument("--project", help="the project folder (default: the project this skill is installed in)")
     parser.add_argument("--check", action="store_true", help="report only, write nothing")
+    parser.add_argument("--no-install", action="store_true", help="do not install missing libraries (pip packages, Playwright and its browser)")
     return command_init(parser.parse_args(argv))

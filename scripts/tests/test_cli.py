@@ -15,7 +15,7 @@ def run(*args):
 
 
 def test_init_installs_skill_and_registers_hook(tmp_path):
-    first = run("init", "--project", str(tmp_path))
+    first = run("init", "--project", str(tmp_path), "--no-install")
     installed = tmp_path / ".claude" / "skills" / "pdf-to-ui-replica"
     assert (installed / "SKILL.md").is_file() and (installed / "scripts" / "init.py").is_file()
     assert not (installed / "scripts" / "tests" / "__pycache__").exists()
@@ -23,11 +23,11 @@ def test_init_installs_skill_and_registers_hook(tmp_path):
     settings = json.loads((tmp_path / ".claude" / "settings.json").read_text())
     assert "ebook-gate-stop.py" in json.dumps(settings)
     assert "pdf-to-ui-output/" in (tmp_path / ".gitignore").read_text()
-    again = run("init", "--project", str(tmp_path))                 # idempotent, installed copy kept
+    again = run("init", "--project", str(tmp_path), "--no-install")                 # idempotent, installed copy kept
     assert "kept the installed copy" in again.stdout and "installed in .claude" in first.stdout
     assert json.dumps(json.loads((tmp_path / ".claude" / "settings.json").read_text())).count("ebook-gate-stop.py") == 1
     (installed / "SKILL.md").write_text("old")
-    run("init", "--project", str(tmp_path), "--update")
+    run("init", "--project", str(tmp_path), "--update", "--no-install")
     assert (installed / "SKILL.md").read_text() != "old"
 
 

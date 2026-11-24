@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 // pdf-to-ui-replica: install the skill into a project and run its setup.
-//   npx pdf-to-ui-replica init [--project DIR] [--update] [--check]
+//   npx pdf-to-ui-replica init [--project DIR] [--update] [--check] [--no-install]
 // Node standard library only; works on Windows, Linux and macOS.
 const fs = require('fs')
 const path = require('path')
@@ -9,21 +9,23 @@ const { spawnSync } = require('child_process')
 
 const NAME = 'pdf-to-ui-replica'
 const SKIP = new Set(['.git', 'node_modules', '__pycache__', '.pytest_cache', '.tmp', 'pdf-to-ui-output'])
-const USAGE = `Usage: npx ${NAME} [init] [--project DIR] [--update] [--check]
+const USAGE = `Usage: npx ${NAME} [init] [--project DIR] [--update] [--check] [--no-install]
 
   init       install the skill into <project>/.claude/skills/${NAME}/ and run its setup (default command)
   --project  the project folder (default: the current directory)
   --update   replace an installed copy with this version
   --check    report the environment only, write nothing
+  --no-install  do not install missing libraries (pip packages, Playwright and its browser)
 `
 
 function parse(argv) {
-  const options = { command: 'init', project: process.cwd(), update: false, check: false }
+  const options = { command: 'init', project: process.cwd(), update: false, check: false, noInstall: false }
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
     if (arg === 'init') options.command = 'init'
     else if (arg === '--update') options.update = true
     else if (arg === '--check') options.check = true
+    else if (arg === '--no-install') options.noInstall = true
     else if (arg === '--project') options.project = path.resolve(argv[++i] || '')
     else if (arg === '-h' || arg === '--help') options.command = 'help'
     else throw new Error(`unknown argument: ${arg}`)
@@ -65,6 +67,7 @@ function main() {
   }
   const args = [...python.slice(1), path.join(root, 'scripts', 'init.py'), '--project', options.project]
   if (options.check) args.push('--check')
+  if (options.noInstall) args.push('--no-install')
   return spawnSync(python[0], args, { stdio: 'inherit' }).status ?? 1
 }
 
