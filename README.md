@@ -32,21 +32,20 @@ The workflow, rules and lessons are in [`SKILL.md`](SKILL.md) and [`references/`
 
 ## Install
 
-Works on Windows, Linux and macOS. Run in the project you want to use the skill in:
+Works on Windows, Linux and macOS (needs Node 18+ and Python 3.10+). Run in the project you want to use the skill in:
 
 ```bash
-npx skills@1.7.6 add ntgptit/pdf-to-ui-replica --agent claude-code -y
-python .claude/skills/pdf-to-ui-replica/scripts/init.py      # Windows: py ...; Linux/macOS: python3 ...
+npx github:ntgptit/pdf-to-ui-replica init
 ```
 
-The first line installs the skill into `.claude/skills/pdf-to-ui-replica/` (Claude Code loads it from there). The second line is the setup (`init`, Python 3.10+):
+(once the package is published to npm: `npx pdf-to-ui-replica init`). One command that installs the skill into `.claude/skills/pdf-to-ui-replica/` (Claude Code loads it from there) and runs the setup:
 
 - **checks the environment** and prints the exact install command for every gap: Python packages (`pdfplumber`, `numpy`, `Pillow`), `pdftoppm` (poppler), Node 18+, Playwright and its browser;
 - **registers the Stop hook** in the project's `.claude/settings.json` (merged, never twice, never overwriting);
 - **adds `pdf-to-ui-output/` and `.tmp/pdf-to-ui/` to `.gitignore`** (they hold page images of the book);
 - **reports the UI stack**: builds need React + shadcn/ui + Tailwind CSS v4; analysis works on any project.
 
-Run `init` again after installing the missing tools until it says "Ready". Options: `--check` (report only), `--project DIR`. To update the skill, run the `npx` line again. A private repository needs a GitHub login on the machine.
+Run it again after installing the missing tools until it says "Ready". Options: `--project DIR`, `--update` (replace the installed copy with the latest), `--check` (report only, write nothing). A private repository needs a GitHub login on the machine. Alternative without Node: `npx skills@1.7.6 add ntgptit/pdf-to-ui-replica --agent claude-code -y`, then `python .claude/skills/pdf-to-ui-replica/scripts/init.py` (Windows: `py`).
 
 Typical first run on a machine without the dependencies:
 

@@ -1,0 +1,8 @@
+{
+  "name": "pdf-to-ui-replica",
+  "version": "0.1.0",
+  "description": "Agent skill and toolkit that rebuilds PDF pages as measured web templates and verifies them against the PDF",
+  "bin": { "pdf-to-ui-replica": "bin/cli.js" },
+  "engines": { "node": ">=18" },
+  "license": "UNLICENSED"
+}
